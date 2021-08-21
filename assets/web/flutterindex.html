@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Fund Wallet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+</head>
+<body>
+    <script>
+        function leftTapped() {
+            alert('left');
+        }
+        function rightTapped() {
+            alert('right');
+        }
+        function changeImagePathWith(path) {
+            document.getElementById('img').src=path;
+        }
+        function getAmount(amount) {
+            document.getElementById("amount").value=amount;
+        }
+        function getEmail(email) {
+            document.getElementById("email-address").value=email;
+        }
+        function getName(name) {
+            document.getElementById("first-name").value=name;
+        }
+        window.onload = function(){ 
+            window.sizeNotification.postMessage({
+                width: document.width,
+                height: document.body.scrollHeight
+            });
+        };
+        var postAScriptbutton = document.getElementById('PostAScript');
+        postAScriptbutton.addEventListener('click', function(){
+            Postascript.postMessage('posting a script');
+        }, false);
+        function callFlutter2() {
+            Postascript.postMessage('posting a script');
+        }
+        function callFlutter(param) {
+            //Print.postMessage('JS called flutter');
+            Print.postMessage('RESSS::: '+param);
+        }
+    </script>
+
+    <div class="container mt-5">
+      <!-- <div class="text-center">
+        <h1>Payment page</h1>
+      </div> -->
+      <form id="paymentForm">
+        <div class="mb-1">
+          <label class="form-label">Email address</label>
+          <input type="email" class="form-control" id="email-address" value="" disabled>
+        </div>
+        <div class="mb-1">
+          <label class="form-label">Amount</label>
+          <input type="tel" id="amount" value="" class="form-control" disabled>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="first-name" value="" disabled>
+        </div>
+     
+        <div class="d-grid gap-2 form-submit">
+          <button type="submit" class="btn btn-primary" onclick="payWithPaystack()" type="button">Pay</button>
+        </div>
+      </form>
+      
+    </div>
+
+      <script src="https://js.paystack.co/v1/inline.js"></script>
+      <script>
+        const paymentForm = document.getElementById('paymentForm');
+        paymentForm.addEventListener("submit", payWithPaystack, false);
+        function payWithPaystack(e) {
+        e.preventDefault();
+        let handler = PaystackPop.setup({
+            key: 'pk_test_8309c6e67e21c228f9dc23d3b55fc483988695ab', // Replace with your public key
+            email: document.getElementById("email-address").value,
+            amount: document.getElementById("amount").value * 100,
+            ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+            // label: "Optional string that replaces customer email"
+            onClose: function(){
+            alert('Window closed.');
+            },
+            callback: function(response){
+                console.log(response);
+                //let message = 'Payment complete! Reference: ' + response.reference;
+                //alert(message);
+                callFlutter(response.status);
+            }
+        });
+        handler.openIframe();
+        }
+      </script>
+
+    <!-- <br><br>
+    <button onclick="callFlutter()">callFlutter</button><br><br>
+    <button onclick="callFlutter2()">callFlutter2</button><br><br>
+    <button type="button" id="PostAScript">Post a script message!</button> <br><br>
+    <a href="#" onclick="alert('Thanks for the click')">Click me</a><br><br>
+    <a href="https://google.com">Goto google</a><br><br>
+    <img id="img" src="https://valoraapp.com/_next/static/images/icon-62b90ddabe4910b9c5d55ecabf817aa8.png" width="200" height="200"> -->
+    
+</body>
+</html>
